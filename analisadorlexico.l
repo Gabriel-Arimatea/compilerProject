@@ -6,7 +6,7 @@
 %}
 %{
 %}
-operadores ["+"|"-"|"*"|"/"|"<"|"<="|">"|">="|"=="|"!="|"="|","]
+operadores [\+|\-|\*|\/|\<|\<=|\>|\>=|\==|\!=|\=|\,]
 
 digito [0-9]
 letra  [a-z|A-Z]
@@ -28,8 +28,8 @@ letra  [a-z|A-Z]
 ^"void" {printf(" PALAVRARESERVADA ");}
 ^"while" {printf(" PALAVRARESERVADA ");}
 ^"string" {printf(" PALAVRARESERVADA ");}
-["][^"]*["] {printf(" STRING ");}
-[/*][^"]*[*/] {printf(" COMMENT ");}
+["][^"]*["][";"] {printf(" STRING ");}
+[\/*][^"]*[\*/] {printf(" COMMENT ");}
 [\(] {printf(" ABREPARENTESES ");}
 [\)] {printf(" FECHAPARENTESES ");}
 [\[] {printf(" ABRECOLCHETES ");}
