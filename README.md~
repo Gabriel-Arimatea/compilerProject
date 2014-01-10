@@ -8,10 +8,6 @@ Analisador léxico v0.0 :
 
 	O que falta: Underscore, id com letra e numero e vice versa, Tratamento de Strings e comentários.
 
-Analisador léxico v0.1:
+Analisador léxico v0.1 ( Versão atual) :
 
 	O que falta: Underscore, id com letra e numero e vice versa.
-
-Analisador léxico v0.2 (versão Atual):
-
-	Versão de teste para reconhecimento completo.
