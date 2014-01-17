@@ -1,8 +1,3 @@
-%{
-/*
-	O que falta: Underscore, id com letra e numero e vice versa
- */
-%}
 %option noyywrap
 %{
 #include <stdio.h>
@@ -10,21 +5,17 @@ int comments = 0;
 %}
 %x COMENT
 %x STRING
+%x ID
+%x NUM
 %{
-/* * * * * * * * * * * *
-* * * DEFINITIONS * * *
-* * * * * * * * * * * */
-%}
-%{
+/*  DEFINITIONS  */
 %}
 operadores [\+|\-|\*|\/|\<|\>|\=|\,]
 digito [0-9]
 letra  [a-z|A-Z]
 %%
 %{
-/* * * * * * * * *
-* * * RULES * * *
-* * * * * * * * */
+/* RULES */
 %}
 " "
 \n
@@ -72,10 +63,24 @@ letra  [a-z|A-Z]
 "{" {printf("ABRECHAVES\n");}
 "}" {printf("FECHACHAVES\n");}
 %{
-//ID E NUM
+//ID
 %}
-{letra}+ {printf("ID: %s\n",yytext);}
-{digito}+ {printf("NUM: %s\n",yytext);}
+{letra} {BEGIN(ID);printf("ID: %s",yytext);}
+<ID>{letra} ECHO;
+<ID>"(" {printf("\nABREPARENTESES\n");BEGIN(INITIAL);}
+<ID>"[" {printf("\nABRECOLCHETES\n");BEGIN(INITIAL);}
+<ID>";" {printf("\nFIM DE OPERAÇÃO (;)\n");BEGIN(INITIAL);}
+<ID>" " {printf("\n");BEGIN(INITIAL);}
+<ID>. {printf("\nERRO: ID invalido\n"); BEGIN(INITIAL);}
+%{
+//NUM
+%}
+{digito} {BEGIN(NUM);printf("NUM: %s",yytext);}
+<NUM>{digito} ECHO;
+<NUM>"]" {printf("\nFECHACOLCHETES\n");BEGIN(INITIAL);}
+<NUM>";" {printf("\nFIM DE OPERAÇÃO (;)\n");BEGIN(INITIAL);}
+<NUM>" " {printf("\n");BEGIN(INITIAL);}
+<NUM>. {printf("\nERRO: NUM invalido\n"); BEGIN(INITIAL);}
 %{
 //FIM DE ARQUIVO
 %}

@@ -43,6 +43,7 @@ letra  [a-z|A-Z]
 <STRING>[\\][\"] ECHO;
 <STRING>[^"|\n] ECHO;
 <STRING>["] {printf("\n");  BEGIN(INITIAL);}
+<STRING><<EOF>> {printf("\nERRO: Fim do arquivo alcançado sem aspas fechada!\n");return 0;}
 <STRING>\n {printf("\nERRO: Falta fechar a aspa ou contém quebra de linha!\n");BEGIN(INITIAL);}
 %{
 //TRATAMENTO COMENTARIO
