@@ -12,6 +12,10 @@ Analisador léxico v0.1:
 
 	O que falta: Underscore, id com letra e numero e vice versa.
 
-Analisador léxico v0.2 (versão Atual):
+Analisador léxico v0.2:
 
 	Versão de teste para reconhecimento completo.
+
+Analisador léxico v0.3 (versão Atual):
+
+	Adequação para analisador sintático.

@@ -10,7 +10,8 @@ int comments = 0;
 %{
 /*  DEFINITIONS  */
 %}
-operadores [\+|\-|\*|\/|\<|\>|\=|\,]
+operadores1 [\+|\-]
+operadores2 [\*|\/]
 digito [0-9]
 letra  [a-z|A-Z]
 %%
@@ -24,12 +25,14 @@ letra  [a-z|A-Z]
 %{
 //OPERADORES MATEMATICOS
 %}
-"<="|">="|"=="|"!=" {printf("OPERADOR: %s\n", yytext);}
-{operadores} {printf("OPERADOR: %s\n", yytext);}
+"=="|"!="|"<="|">=" {printf("OPERADOR: %s\n", yytext);}
+"<"|">"|"="|"," {printf("OPERADOR: %s\n", yytext);}
+{operadores1} {printf("OPERADOR: %s\n", yytext);}
+{operadores2} {printf("OPERADOR: %s\n", yytext);}
 %{
 //PALAVRAS RESERVADAS
 %}
-"int" {printf("PALAVRARESERVADA: %s\n",yytext);}
+"int" {printf("PALAVRARESERVADA: %s\n",yytext); }
 "else" {printf("PALAVRARESERVADA: %s\n",yytext);}
 "if" {printf("PALAVRARESERVADA: %s\n",yytext);}
 "return" {printf("PALAVRARESERVADA: %s\n",yytext);}
