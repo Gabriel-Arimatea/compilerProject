@@ -1,53 +1,70 @@
 %option noyywrap
 %{
 #include <stdio.h>
+#include "referenciabibliografica.h"
+#include "analsint.h"
 int comments = 0;
 %}
 %x COMENT
 %x STRING
-%x ID
-%x NUM
 %{
 /*  DEFINITIONS  */
 %}
 operadores1 [\+|\-]
 operadores2 [\*|\/]
-digito [0-9]
-letra  [a-z|A-Z]
+digito [0-9]+
+letra [a-z|A-Z]+
 %%
 %{
 /* RULES */
 %}
-" "
-\n
-\t
-";" {printf("FIM DE OPERAÇÃO (;)\n");}
-%{
-//OPERADORES MATEMATICOS
-%}
-"=="|"!="|"<="|">=" {printf("OPERADOR: %s\n", yytext);}
-"<"|">"|"="|"," {printf("OPERADOR: %s\n", yytext);}
-{operadores1} {printf("OPERADOR: %s\n", yytext);}
-{operadores2} {printf("OPERADOR: %s\n", yytext);}
 %{
 //PALAVRAS RESERVADAS
 %}
-"int" {printf("PALAVRARESERVADA: %s\n",yytext); }
-"else" {printf("PALAVRARESERVADA: %s\n",yytext);}
-"if" {printf("PALAVRARESERVADA: %s\n",yytext);}
-"return" {printf("PALAVRARESERVADA: %s\n",yytext);}
-"void" {printf("PALAVRARESERVADA: %s\n",yytext);}
-"while" {printf("PALAVRARESERVADA: %s\n",yytext);}
-"string" {printf("PALAVRARESERVADA: %s\n",yytext);}
+"int" {printf("PALAVRARESERVADA: %s\n",yytext); return INT;}
+"string" {printf("PALAVRARESERVADA: %s\n",yytext);return STRNG;}
+"else" {printf("PALAVRARESERVADA: %s\n",yytext);return ELSE;}
+"if" {printf("PALAVRARESERVADA: %s\n",yytext);return IF;}
+"return" {printf("PALAVRARESERVADA: %s\n",yytext);return RETURN;}
+"void" {printf("PALAVRARESERVADA: %s\n",yytext);return VOID;}
+"while" {printf("PALAVRARESERVADA: %s\n",yytext);return WHILE;}
+
+%{
+//OPERADORES MATEMATICOS
+%}
+"," {printf("OPERADOR: %s\n", yytext);return VIRG;}
+"=="|"!="|"<="|">=" {printf("OPERADOR: %s\n", yytext);return OP4;}
+"<"|">" {printf("OPERADOR: %s\n", yytext);return OP3;}
+"=" {printf("OPERADOR: %s\n", yytext);return IGUAL;}
+{operadores1} {printf("OPERADOR: %s\n", yytext);return OP1;}
+{operadores2} {printf("OPERADOR: %s\n", yytext);return OP2;}
+
+%{
+//SIMBOLOS OPERADORES
+%}
+"(" {printf("ABREPARENTESES\n");return ABPAR;}
+")" {printf("FECHAPARENTESES\n");return FEPAR;}
+"[" {printf("ABRECOLCHETES\n");return ABCOL;}
+"]" {printf("FECHACOLCHETES\n");return FECOL;}
+"{" {printf("ABRECHAVES\n");return ABCHAV;}
+"}" {printf("FECHACHAVES\n");return FECHAV;}
+
+%{
+//NUM
+%}
+{digito} {printf("NUM: %s\n",yytext);return NUM;}
+
+%{
+//ID
+%}
+{letra} {printf("ID %s\n",yytext);return ID;}
+({digito}{letra}({digito}|{letra})*) {printf("erro lexico");}
+({letra}{digito}({letra}|{digito})*) {printf("erro lexico");}
+
 %{
 //TRATAMENTO STRING
 %}
-["] {BEGIN(STRING);printf("STRING: ");}
-<STRING>[\\][\"] ECHO;
-<STRING>[^"|\n] ECHO;
-<STRING>["] {printf("\n");  BEGIN(INITIAL);}
-<STRING><<EOF>> {printf("\nERRO: Fim do arquivo alcançado sem aspas fechada!\n");return 0;}
-<STRING>\n {printf("\nERRO: Falta fechar a aspa ou contém quebra de linha!\n");BEGIN(INITIAL);}
+[\"][^\n]*[\"] {printf("String: %s\n",yytext );return SV;}
 %{
 //TRATAMENTO COMENTARIO
 %}
@@ -57,36 +74,15 @@ letra  [a-z|A-Z]
 		if(comments == 0) {printf("COMMENT\n");BEGIN (INITIAL);}}
 <COMENT><<EOF>> {if(comments != 0){printf("ERRO: Faltam fechar %d comentarios!\n",comments); return 0;}}
 <COMENT>.|\n
-%{
-//SIMBOLOS OPERADORES
-%}
-"(" {printf("ABREPARENTESES\n");}
-")" {printf("FECHAPARENTESES\n");}
-"[" {printf("ABRECOLCHETES\n");}
-"]" {printf("FECHACOLCHETES\n");}
-"{" {printf("ABRECHAVES\n");}
-"}" {printf("FECHACHAVES\n");}
-%{
-//ID
-%}
-{letra} {BEGIN(ID);printf("ID: %s",yytext);}
-<ID>{letra} ECHO;
-<ID>"(" {printf("\nABREPARENTESES\n");BEGIN(INITIAL);}
-<ID>"[" {printf("\nABRECOLCHETES\n");BEGIN(INITIAL);}
-<ID>";" {printf("\nFIM DE OPERAÇÃO (;)\n");BEGIN(INITIAL);}
-<ID>" " {printf("\n");BEGIN(INITIAL);}
-<ID>. {printf("\nERRO: ID invalido\n"); BEGIN(INITIAL);}
-%{
-//NUM
-%}
-{digito} {BEGIN(NUM);printf("NUM: %s",yytext);}
-<NUM>{digito} ECHO;
-<NUM>"]" {printf("\nFECHACOLCHETES\n");BEGIN(INITIAL);}
-<NUM>";" {printf("\nFIM DE OPERAÇÃO (;)\n");BEGIN(INITIAL);}
-<NUM>" " {printf("\n");BEGIN(INITIAL);}
-<NUM>. {printf("\nERRO: NUM invalido\n"); BEGIN(INITIAL);}
+
 %{
 //FIM DE ARQUIVO
 %}
+
 <<EOF>> {printf(" \nTERMINOU \n"); return 0;}
+
+";" {printf("FIM DE OPERACAO (;)\n");return PV;}
+
+.|\n|\r
+
 %%
