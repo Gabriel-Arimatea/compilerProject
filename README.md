@@ -20,6 +20,12 @@ Analisador léxico v0.3:
 
 	Adequação para analisador sintático.
 
-Analisador Sintático v0.1 (versão Atual):
+Analisador Sintático v0.1:
 
 	Construção do analisador sintático e junção com o analisador léxico (alterado)
+
+Compilador Final (versão Atual):
+
+	Adequação do analisador sintático e léxico e algumas adaptações para tentativa de construção do analisador semântico. 
+	Feito: Tabela de símbolos e contrução da Tabela Hash
+	O que falta: Construção da análise semântica.
