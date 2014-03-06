@@ -1,0 +1,79 @@
+TUTORIAL PARA USO DO COMPILADOR DO COMPILERPROJECT, PROPOSTO NA MATÉRIA DE
+LINGUAGENS FORMAIS E COMPILADORES PELO PROFESSOR BRENO PIVA RIBEIRO E FEITO
+PELOS ALUNOS GABRIEL DE CARVALHO ARIMATÉA E LUCAS DE MELO FONSECA.
+
+1 - OBSERVAÇÕES IMPORTANTES
+
+Devido a problemas ocorridos nas últimas semanas, não foi possível concluir 
+a parte semântica, onde a tudo que foi feito referente a esta parte esta na
+pasta "semantica" deste repositório.
+
+2 - TUTORIAL PARA USO DO COMPILADOR
+
+2.1 - TUTORIAL PARA COMPILAÇÂO DO COMPILADOR (ANALISADOR SINTÁTICO E LÉXICO)
+
+Foi criado um shell script (sint.sh) com os seguintes comandos
+
+clear
+bison -v -d -o analsint.c analisadorsintatico.y
+flex -v -t analisadorlexico.l > analex.c
+gcc analsint.c analex.c -o compsintlex
+
+para a geração do compilador com análise léxica e semântica do código de teste.
+Este gera um executável "compsintlex". Para executar, basta executar a seguinte
+linha:
+
+./sint.sh
+
+Caso ele não execute, é por falta de permissão do Linux. Para permitir, basta a 
+executar a seguinte linha, dentro da pasta onde esta o projeto:
+
+chmod +x sint.sh
+
+Para fazer a análise semântica e sintática de um arquivo de teste, basta executar
+a seguinte linha no terminal, dentro da pasta onde esta o projeto:
+
+./compsintlex <arquivodeteste
+
+Exemplo:
+
+./compsintlex <teste1.c
+
+No exemplo do teste1.c, a saída no terminal deverá ser:
+
+COMMENT
+PALAVRARESERVADA: int
+ID teste
+FIM DE OPERACAO (;)
+PALAVRARESERVADA: string
+ID var
+FIM DE OPERACAO (;)
+PALAVRARESERVADA: int
+ID main
+ABREPARENTESES
+FECHAPARENTESES
+ABRECHAVES
+ID var
+OPERADOR: =
+String: "blabla blablabla \n"
+FIM DE OPERACAO (;)
+ID teste
+OPERADOR: =
+NUM: 1
+OPERADOR: +
+NUM: 2
+FIM DE OPERACAO (;)
+ID printf
+ABREPARENTESES
+String: "bla %s"
+OPERADOR: ,
+ID var
+FECHAPARENTESES
+FIM DE OPERACAO (;)
+PALAVRARESERVADA: return
+NUM: 0
+FIM DE OPERACAO (;)
+FECHACHAVES
+
+Quando é verificado um erro léxico, o terminal exibe que foi encontrado um erro léxico
+e para a execução, assim como quando encontrado um erro sintático ("Syntax error.").
